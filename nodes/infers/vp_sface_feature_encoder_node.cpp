@@ -4,16 +4,16 @@
 #include "vp_sface_feature_encoder_node.h"
 
 namespace vp_nodes {
-        
+
     vp_sface_feature_encoder_node::vp_sface_feature_encoder_node(std::string node_name, std::string model_path):
-                                                                vp_secondary_infer_node(node_name, model_path, 
-                                                                "", "", 
-                                                                112, 112, 
-                                                                1, std::vector<int>(), 0, 0, 
+                                                                vp_secondary_infer_node(node_name, model_path,
+                                                                "", "",
+                                                                112, 112,
+                                                                1, std::vector<int>(), 0, 0,
                                                                 0, 1, cv::Scalar()) {
         this->initialized();
     }
-    
+
     vp_sface_feature_encoder_node::~vp_sface_feature_encoder_node() {
         deinitialized();
     }
@@ -37,7 +37,7 @@ namespace vp_nodes {
             for (int j = 0; j < feature.cols; j++) {
                 frame_meta->face_targets[i]->embeddings.push_back(feature.at<float>(0, j));
             }
-        }  
+        }
     }
 
     // refer to vp_secondary_infer_node::prepare
@@ -45,21 +45,21 @@ namespace vp_nodes {
         // only one by one for secondary infer node
         assert(frame_meta_with_batch.size() == 1);
 
-        // align face and crop 
+        // align face and crop
         auto& frame_meta = frame_meta_with_batch[0];
 
         // batch by batch inside single frame
         for (auto& i : frame_meta->face_targets) {
             // align and crop
-            float face_keypoints[5][2] = 
-                {{i->key_points[0].first, i->key_points[0].second}, 
-                 {i->key_points[1].first, i->key_points[1].second}, 
-                 {i->key_points[2].first, i->key_points[2].second}, 
-                 {i->key_points[3].first, i->key_points[3].second}, 
-                 {i->key_points[4].first, i->key_points[4].second}};
+            float face_keypoints[5][2] =
+                {{static_cast<float>(i->key_points[0].first), static_cast<float>(i->key_points[0].second)},
+                 {static_cast<float>(i->key_points[1].first), static_cast<float>(i->key_points[1].second)},
+                 {static_cast<float>(i->key_points[2].first), static_cast<float>(i->key_points[2].second)},
+                 {static_cast<float>(i->key_points[3].first), static_cast<float>(i->key_points[3].second)},
+                 {static_cast<float>(i->key_points[4].first), static_cast<float>(i->key_points[4].second)}};
             cv::Mat aligned_face;
             alignCrop(frame_meta->frame, face_keypoints, aligned_face);
-            mats_to_infer.push_back(aligned_face); 
+            mats_to_infer.push_back(aligned_face);
         }
     }
 

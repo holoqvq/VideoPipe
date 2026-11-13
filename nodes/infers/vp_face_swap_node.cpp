@@ -2,8 +2,8 @@
 #include "vp_face_swap_node.h"
 
 namespace vp_nodes {
-    
-    vp_face_swap_node::vp_face_swap_node(std::string node_name, 
+
+    vp_face_swap_node::vp_face_swap_node(std::string node_name,
                                         std::string yunet_face_detect_model,
                                         std::string buffalo_l_face_encoding_model,
                                         std::string emap_file_for_embeddings,
@@ -32,7 +32,7 @@ namespace vp_nodes {
         init_source_face_embeddings(swap_source_image, swap_source_face_index, emap_file_for_embeddings);
         this->initialized();
     }
-    
+
     vp_face_swap_node::~vp_face_swap_node() {
         deinitialized();
     }
@@ -49,14 +49,14 @@ namespace vp_nodes {
             // extract faces and update back to frame meta
             // to-do
         }
-        
+
         auto start_time = std::chrono::system_clock::now();
         // iterate each face target
         for (int i = 0; i < frame_meta->face_targets.size(); i++) {
             if (frame_meta->face_targets[i]->width < min_face_w_h || frame_meta->face_targets[i]->height < min_face_w_h) {
                 continue;
             }
-            
+
             cv::Mat aligned_face, swapped_face;
 
             //auto t = std::chrono::system_clock::now();
@@ -229,18 +229,18 @@ namespace vp_nodes {
     }
 
     cv::Mat vp_face_swap_node::align_crop(cv::Mat& src_img, std::vector<std::pair<int, int>>& kps, cv::Mat& aligned_image) {
-        float face_keypoints[5][2] = 
-            {{kps[0].first, kps[0].second}, 
-            {kps[1].first, kps[1].second}, 
-            {kps[2].first, kps[2].second},  
-            {kps[3].first, kps[3].second}, 
-            {kps[4].first, kps[4].second}};
+        float face_keypoints[5][2] =
+            {{static_cast<float>(kps[0].first), static_cast<float>(kps[0].second)},
+            {static_cast<float>(kps[1].first), static_cast<float>(kps[1].second)},
+            {static_cast<float>(kps[2].first), static_cast<float>(kps[2].second)},
+            {static_cast<float>(kps[3].first), static_cast<float>(kps[3].second)},
+            {static_cast<float>(kps[4].first), static_cast<float>(kps[4].second)}};
 
         cv::Mat warp_mat = get_similarity_transform_matrix(face_keypoints);
         cv::warpAffine(src_img, aligned_image, warp_mat, cv::Size(128, 128), cv::INTER_LINEAR);
         return warp_mat;
     }
-    
+
     void vp_face_swap_node::extract_faces(const cv::Mat& frame, std::vector<face_box>& face_boxes) {
         auto blob_to_infer = cv::dnn::blobFromImage(frame);
         face_extract_net.setInput(blob_to_infer);
@@ -267,7 +267,7 @@ namespace vp_nodes {
         if (loc.rows != priors.size()) {
             generatePriors(inputW, inputH);
         }
-        
+
         assert(loc.rows == priors.size());
         assert(loc.rows == conf.rows);
         assert(loc.rows == iou.rows);
@@ -354,7 +354,7 @@ namespace vp_nodes {
                 auto y = int(nms_faces.at<float>(i, 1));
                 auto w = int(nms_faces.at<float>(i, 2));
                 auto h = int(nms_faces.at<float>(i, 3));
-                
+
                 // check value range
                 x = std::max(x, 0);
                 y = std::max(y, 0);
