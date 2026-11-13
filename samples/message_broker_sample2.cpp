@@ -22,7 +22,7 @@ int main() {
     auto trt_vehicle_detector = std::make_shared<vp_nodes::vp_trt_vehicle_detector>("vehicle_detector", "./vp_data/models/trt/vehicle/vehicle_v8.5.trt");
     auto trt_vehicle_plate_detector = std::make_shared<vp_nodes::vp_trt_vehicle_plate_detector>("vehicle_plate_detector", "./vp_data/models/trt/plate/det_v8.5.trt", "./vp_data/models/trt/plate/rec_v8.5.trt");
     auto xml_socket_broker_0 = std::make_shared<vp_nodes::vp_xml_socket_broker_node>("xml_socket_broker_0", "192.168.77.68", 6666);
-    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node_v2>("osd_0", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node_v2>("osd_0");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0, true, vp_objects::vp_size{640, 360});
 
     // construct pipeline

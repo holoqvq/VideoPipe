@@ -36,7 +36,7 @@ int main() {
                                                                              "http://192.168.77.219:11434",          // api base url
                                                                              "",                                     // api key (not required by Ollama)
                                                                              llmlib::LLMBackendType::Ollama);        // backend type, make sure Ollama is installed at 192.168.77.219
-    auto mllm_osd_0 = std::make_shared<vp_nodes::vp_mllm_osd_node>("osd_0", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto mllm_osd_0 = std::make_shared<vp_nodes::vp_mllm_osd_node>("osd_0");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
 
     // construct pipeline

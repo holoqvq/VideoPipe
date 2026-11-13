@@ -4,12 +4,8 @@
 
 namespace vp_nodes {
     
-    vp_osd_node_v3::vp_osd_node_v3(std::string node_name, std::string font, bool show_bbox): 
+    vp_osd_node_v3::vp_osd_node_v3(std::string node_name, bool show_bbox):
                                 vp_node(node_name), show_bbox(show_bbox) {
-        if (!font.empty()) {
-            ft2 = cv::freetype::createFreeType2();
-            ft2->loadFontData(font, 0);   
-        }       
         this->initialized();
     }
     
@@ -50,15 +46,10 @@ namespace vp_nodes {
                 }
 
                 cv::rectangle(canvas, cv::Rect(i->x, i->y, i->width, i->height), cv::Scalar(255, 255, 0), 2);
-                if (ft2 != nullptr) {
-                    ft2->putText(canvas, labels_to_display, cv::Point(i->x, i->y), 20, cv::Scalar(255, 0, 255), cv::FILLED, cv::LINE_AA, true);
-                }
-                else {               
-                    //cv::putText(canvas, labels_to_display, cv::Point(i->x, i->y), 1, 1, cv::Scalar(255, 0, 255));
-                    int baseline = 0;
-                    auto size = cv::getTextSize(labels_to_display, 1, 1, 1, &baseline);
-                    vp_utils::put_text_at_center_of_rect(canvas, labels_to_display, cv::Rect(i->x, i->y - size.height, size.width, size.height), true);
-                }
+                //cv::putText(canvas, labels_to_display, cv::Point(i->x, i->y), 1, 1, cv::Scalar(255, 0, 255));
+                int baseline = 0;
+                auto size = cv::getTextSize(labels_to_display, 1, 1, 1, &baseline);
+                vp_utils::put_text_at_center_of_rect(canvas, labels_to_display, cv::Rect(i->x, i->y - size.height, size.width, size.height), true);
             }
             /* mask area */
             if (!i->mask.empty()) {

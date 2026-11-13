@@ -1,7 +1,5 @@
 #pragma once
 
-#include <opencv2/freetype.hpp>
-
 #include "../vp_node.h"
 
 namespace vp_nodes {
@@ -10,16 +8,13 @@ namespace vp_nodes {
     class vp_osd_node_v2: public vp_node
     {
     private:
-        // support chinese font
-        cv::Ptr<cv::freetype::FreeType2> ft2;
-                
         // leave a gap at the bottom of osd frame
         int gap_height = 256;
         int padding = 10;
     protected:
         virtual std::shared_ptr<vp_objects::vp_meta> handle_frame_meta(std::shared_ptr<vp_objects::vp_frame_meta> meta) override;
     public:
-        vp_osd_node_v2(std::string node_name, std::string font = "");
+        vp_osd_node_v2(std::string node_name);
         ~vp_osd_node_v2();
     };
 

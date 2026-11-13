@@ -1,6 +1,7 @@
 #pragma once
 
-#include <opencv2/freetype.hpp>
+#include <map>
+#include <vector>
 
 #include "../vp_node.h"
 
@@ -11,8 +12,6 @@ namespace vp_nodes {
     class vp_plate_osd_node: public vp_node
     {
     private:
-        // support chinese font
-        cv::Ptr<cv::freetype::FreeType2> ft2;
         float mask_threshold = 0.3;
 
         // draw color on frame
@@ -36,7 +35,7 @@ namespace vp_nodes {
     protected:
         virtual std::shared_ptr<vp_objects::vp_meta> handle_frame_meta(std::shared_ptr<vp_objects::vp_frame_meta> meta) override;
     public:
-        vp_plate_osd_node(std::string node_name, std::string font = "", bool display_his = true);
+        vp_plate_osd_node(std::string node_name, bool display_his = true);
         ~vp_plate_osd_node();
     };
 }

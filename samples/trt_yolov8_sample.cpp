@@ -19,13 +19,13 @@ int main() {
     // create nodes for 1st pipeline
     auto file_src_0 = std::make_shared<vp_nodes::vp_file_src_node>("file_src_0", 0, "./vp_data/test_video/face2.mp4");
     auto yolo8_detector = std::make_shared<vp_nodes::vp_trt_yolov8_detector>("yolo8_detector", "./vp_data/models/trt/others/yolov8s_v8.5.engine", "./vp_data/models/coco_80classes.txt");
-    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node_v3>("osd_0", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node_v3>("osd_0");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
 
     // create nodes for 2nd pipeline
     auto file_src_1 = std::make_shared<vp_nodes::vp_file_src_node>("file_src_1", 1, "./vp_data/test_video/face2.mp4");
     auto yolo8_seg_detector = std::make_shared<vp_nodes::vp_trt_yolov8_seg_detector>("yolo8_seg_detector", "./vp_data/models/trt/others/yolov8s-seg_v8.5.engine", "./vp_data/models/coco_80classes.txt");
-    auto osd_1 = std::make_shared<vp_nodes::vp_osd_node_v3>("osd_1", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd_1 = std::make_shared<vp_nodes::vp_osd_node_v3>("osd_1");
     auto screen_des_1 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_1", 1);
 
     // create nodes for 3rd pipeline

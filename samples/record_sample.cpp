@@ -20,7 +20,7 @@
 
 int main() {
     VP_SET_LOG_INCLUDE_THREAD_ID(false);
-    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::INFO);
+    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::Info);
     VP_SET_LOG_TO_CONSOLE(false);   // need interact on console
     VP_LOGGER_INIT();
 

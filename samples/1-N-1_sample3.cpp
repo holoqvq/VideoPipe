@@ -27,7 +27,7 @@ int main() {
     auto plate_detector = std::make_shared<vp_nodes::vp_trt_vehicle_plate_detector_v2>("plate_detector", "./vp_data/models/trt/plate/det_v8.5.trt", "./vp_data/models/trt/plate/rec_v8.5.trt");
     auto plate_tracker = std::make_shared<vp_nodes::vp_sort_track_node>("plate_tracker");
     auto sync = std::make_shared<vp_nodes::vp_sync_node>("sync");
-    auto osd = std::make_shared<vp_nodes::vp_osd_node>("osd", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd = std::make_shared<vp_nodes::vp_osd_node>("osd");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
     
     // construct 1-N-1 pipeline

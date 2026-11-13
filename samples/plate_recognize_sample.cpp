@@ -16,7 +16,7 @@ int main() {
     // create nodes
     auto image_src_0 = std::make_shared<vp_nodes::vp_image_src_node>("image_src_0", 0, "./vp_data/test_images/plates/%d.jpg", 1);
     auto plate_detector = std::make_shared<vp_nodes::vp_trt_vehicle_plate_detector_v2>("plate_detector", "./vp_data/models/trt/plate/det_v8.5.trt", "./vp_data/models/trt/plate/rec_v8.5.trt");
-    auto osd_0 = std::make_shared<vp_nodes::vp_plate_osd_node>("osd_0", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd_0 = std::make_shared<vp_nodes::vp_plate_osd_node>("osd_0");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
 
     // construct pipeline 

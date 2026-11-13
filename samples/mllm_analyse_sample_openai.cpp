@@ -30,7 +30,7 @@ int main() {
                                                                              "https://dashscope.aliyuncs.com/compatible-mode/v1", // api base url
                                                                              "sk-XXX",                                            // api key (from aliyun)
                                                                              llmlib::LLMBackendType::OpenAI);                     // backend type
-    auto mllm_osd_0 = std::make_shared<vp_nodes::vp_mllm_osd_node>("osd_0", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto mllm_osd_0 = std::make_shared<vp_nodes::vp_mllm_osd_node>("osd_0");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
 
     // construct pipeline

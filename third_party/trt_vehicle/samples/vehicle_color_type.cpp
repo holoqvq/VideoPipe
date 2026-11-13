@@ -1,5 +1,5 @@
 #include <opencv2/core/core.hpp>
-#include <opencv2/freetype.hpp>
+#include <opencv2/imgproc.hpp>
 #include <string>
 #include <vector>
 #include <map>
@@ -48,7 +48,6 @@ std::map<std::string, std::string> types {{"bus", "巴士"},
 int main() {
     std::string vehicle_color_model_path = "./vp_data/models/trt/vehicle/vehicle_color_v8.5.trt";
     std::string vehicle_type_model_path = "./vp_data/models/trt/vehicle/vehicle_type_v8.5.trt";
-    std::string font_path = "./vp_data/font/NotoSansCJKsc-Medium.otf";
 
     auto image = cv::imread("./vp_data/test_images/vehicle_cls/1.jpg");     // vehicle in the center of image, crop it first if possible
     auto image2 = cv::imread("./vp_data/test_images/vehicle_cls/2.jpg");
@@ -56,9 +55,6 @@ int main() {
     auto image4 = cv::imread("./vp_data/test_images/vehicle_cls/4.jpg");
     auto image5 = cv::imread("./vp_data/test_images/vehicle_cls/5.jpg");
     auto image6 = cv::imread("./vp_data/test_images/vehicle_cls/6.jpg");
-
-    cv::Ptr<cv::freetype::FreeType2> ft2 = cv::freetype::createFreeType2();
-    ft2->loadFontData(font_path, 0); 
 
     auto vehicle_color_classifier = new trt_vehicle::VehicleColorClassifier(vehicle_color_model_path);
     auto vehicle_type_classifier = new trt_vehicle::VehicleTypeClassifier(vehicle_type_model_path);
@@ -72,7 +68,7 @@ int main() {
     for (int i = 0; i < img_datas.size(); i++) {
         /* draw class label at top left */
         // cv::putText(img_datas[i], color_results[i].label + " " + types.at(type_results[i].label), cv::Point(30, 30), 1, 2, colors.at(color_results[i].label));
-        ft2->putText(img_datas[i], color_results[i].label + " " + types.at(type_results[i].label), cv::Point(30, 30), 25, cv::Scalar(0, 255, 0), cv::FILLED, cv::LINE_AA, true);
+        cv::putText(img_datas[i], color_results[i].label + " " + types.at(type_results[i].label), cv::Point(30, 30), cv::FONT_HERSHEY_SIMPLEX, 0.83, cv::Scalar(0, 255, 0), 1, cv::LINE_AA);
     }
     
     cv::imshow("image", image);

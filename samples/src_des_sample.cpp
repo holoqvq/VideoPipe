@@ -34,9 +34,9 @@ int main() {
 
     auto split = std::make_shared<vp_nodes::vp_split_node>("", true);
 
-    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node>("osd_0", "./vp_data/font/NotoSansCJKsc-Medium.otf");
-    auto osd_1 = std::make_shared<vp_nodes::vp_osd_node>("osd_1", "./vp_data/font/NotoSansCJKsc-Medium.otf");
-    auto osd_2 = std::make_shared<vp_nodes::vp_osd_node>("osd_2", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node>("osd_0");
+    auto osd_1 = std::make_shared<vp_nodes::vp_osd_node>("osd_1");
+    auto osd_2 = std::make_shared<vp_nodes::vp_osd_node>("osd_2");
 
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
     auto rtmp_des_1 = std::make_shared<vp_nodes::vp_rtmp_des_node>("rtmp_des_0", 1, "rtmp://192.168.77.60/live/10000");

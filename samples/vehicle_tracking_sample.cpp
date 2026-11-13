@@ -14,7 +14,7 @@ int main() {
     auto file_src_0 = std::make_shared<vp_nodes::vp_file_src_node>("file_src_0", 0, "./vp_data/test_video/vehicle_stop.mp4", 0.5);
     auto trt_vehicle_detector = std::make_shared<vp_nodes::vp_trt_vehicle_detector>("vehicle_detector", "./vp_data/models/trt/vehicle/vehicle_v8.5.trt");
     auto track_0 = std::make_shared<vp_nodes::vp_sort_track_node>("track_0");
-    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node>("osd_0", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node>("osd_0");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
 
     // construct pipeline

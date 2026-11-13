@@ -19,7 +19,7 @@ int main() {
     // create nodes
     auto file_src_0 = std::make_shared<vp_nodes::vp_file_src_node>("file_src_0", 0, "./vp_data/test_video/ocr.mp4", 0.4);
     auto ppocr_text_detector = std::make_shared<vp_nodes::vp_ppocr_text_detector_node>("ppocr_text_detector", "./vp_data/models/text/ppocr/ch_PP-OCRv3_det_infer","./vp_data/models/text/ppocr/ch_ppocr_mobile_v2.0_cls_infer","./vp_data/models/text/ppocr/ch_PP-OCRv3_rec_infer","./vp_data/models/text/ppocr/ppocr_keys_v1.txt");
-    auto osd_0 = std::make_shared<vp_nodes::vp_text_osd_node>("osd_0", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd_0 = std::make_shared<vp_nodes::vp_text_osd_node>("osd_0");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0, true);
     auto rtmp_des_0 = std::make_shared<vp_nodes::vp_rtmp_des_node>("rtmp_des_0", 0, "rtmp://192.168.77.60/live/10000");
 

@@ -22,7 +22,7 @@ int main() {
     auto rtmp_src_0 = std::make_shared<vp_nodes::vp_rtmp_src_node>("rtmp_src_0", 0, "rtmp://192.168.77.196/live/1000", 0.6);
     auto trt_vehicle_detector = std::make_shared<vp_nodes::vp_trt_vehicle_detector>("vehicle_detector", "./vp_data/models/trt/vehicle/vehicle_v8.5.trt");
     auto track_0 = std::make_shared<vp_nodes::vp_sort_track_node>("track_0");
-    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node>("osd_0", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd_0 = std::make_shared<vp_nodes::vp_osd_node>("osd_0");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
     auto rtmp_des_0 = std::make_shared<vp_nodes::vp_rtmp_des_node>("rtmp_des_0", 0, "rtmp://192.168.77.196/live/2000", vp_objects::vp_size{1280, 720}, 1024 * 2);
 

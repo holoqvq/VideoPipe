@@ -14,7 +14,7 @@
 */
 
 int main() {
-    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::INFO);
+    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::Info);
     VP_LOGGER_INIT();
 
     // create nodes

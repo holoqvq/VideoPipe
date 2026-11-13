@@ -11,14 +11,14 @@
 */
 
 int main() {
-    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::INFO);
+    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::Info);
     VP_LOGGER_INIT();
 
     // create nodes
     auto file_src_0 = std::make_shared<vp_nodes::vp_file_src_node>("file_src_0", 0, "./vp_data/test_video/vehicle_count.mp4", 0.6);
     // 2 classes using yolov5-seg
     auto das_detector = std::make_shared<vp_nodes::vp_yolo5_seg_node>("das_detector", "./vp_data/models/lane/das.onnx", "./vp_data/models/lane/das_2classes.txt");
-    auto osd_v3_0 = std::make_shared<vp_nodes::vp_osd_node_v3>("osd_v3_0", "./vp_data/font/NotoSansCJKsc-Medium.otf", false);
+    auto osd_v3_0 = std::make_shared<vp_nodes::vp_osd_node_v3>("osd_v3_0", false);
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
 
     // construct pipeline

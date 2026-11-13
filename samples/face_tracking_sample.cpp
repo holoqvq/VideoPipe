@@ -15,7 +15,7 @@
 int main() {
     VP_SET_LOG_INCLUDE_CODE_LOCATION(false);
     VP_SET_LOG_INCLUDE_THREAD_ID(false);
-    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::INFO);
+    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::Info);
     VP_LOGGER_INIT();
 
     // create nodes

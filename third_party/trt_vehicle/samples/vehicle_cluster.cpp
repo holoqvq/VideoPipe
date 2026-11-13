@@ -1,5 +1,4 @@
 #include <opencv2/core/core.hpp>
-#include <opencv2/freetype.hpp>
 #include <string>
 #include <vector>
 #include <memory>
@@ -86,8 +85,6 @@ void reduce_dims(std::vector<std::pair<std::string, std::vector<float>>>& featur
 
 int main() {
     auto vehicle_dataset_dir = "./vp_data/test_images/vehicle_feature";
-    auto ft2 = cv::freetype::createFreeType2();
-    ft2->loadFontData("./vp_data/font/NotoSansCJKsc-Medium.otf", 0);
 
     // load vehicle dataset 
     std::vector<std::pair<std::string, std::vector<float>>> features_set;

@@ -4,12 +4,8 @@
 
 namespace vp_nodes {
     
-    vp_plate_osd_node::vp_plate_osd_node(std::string node_name, std::string font, bool display_his): 
+    vp_plate_osd_node::vp_plate_osd_node(std::string node_name, bool display_his):
                                 vp_node(node_name), display_his(display_his) {
-        if (!font.empty()) {
-            ft2 = cv::freetype::createFreeType2();
-            ft2->loadFontData(font, 0);   
-        }       
         this->initialized();
     }
     
@@ -44,12 +40,7 @@ namespace vp_nodes {
             }
             
             cv::rectangle(canvas, cv::Rect(i->x, i->y, i->width, i->height), draw_colors.at(color), 2);
-            if (ft2 != nullptr) {
-                ft2->putText(canvas, text_2_display, cv::Point(i->x, i->y), 20, draw_colors.at(color), cv::FILLED, cv::LINE_AA, true);
-            }
-            else {               
-                // ignore
-            }   
+            cv::putText(canvas, text_2_display, cv::Point(i->x, i->y), cv::FONT_HERSHEY_SIMPLEX, 0.67, draw_colors.at(color), 1, cv::LINE_AA);
 
             if (display_his) {
                 // put it to cache

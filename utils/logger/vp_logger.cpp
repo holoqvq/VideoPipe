@@ -7,6 +7,11 @@ namespace vp_utils {
     {
     }
     
+    vp_logger& vp_logger::get_logger() {
+        static vp_logger logger;
+        return logger;
+    }
+
     vp_logger::~vp_logger() {
         die();
         if (log_writer_th.joinable()) {
@@ -51,7 +56,7 @@ namespace vp_utils {
         }
         
         // keywords filter for debug level
-        if (level == vp_log_level::DEBUG && keywords_for_debug_log.size() != 0) {
+        if (level == vp_log_level::Debug && keywords_for_debug_log.size() != 0) {
             bool filterd = true;
             for(auto& keywords: keywords_for_debug_log) {
                 if (message.find(keywords) != std::string::npos) {

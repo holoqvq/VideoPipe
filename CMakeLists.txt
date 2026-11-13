@@ -9,10 +9,18 @@ cmake_minimum_required(VERSION 3.10)
 project(video_pipe VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
+if(MSVC)
+    # sources are UTF-8 without BOM and contain non-ASCII string literals
+    add_compile_options(/utf-8)
+endif()
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fPIC -w -fdiagnostics-color=always -pthread")
+if(UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fPIC -w -fdiagnostics-color=always -pthread")
+endif()
 # save all libs(including third_party's) to 'libs'
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # optional for build, modify values when configure the project using 'cmake -DVP_WITH_CUDA=OFF ..'
 option(VP_WITH_CUDA "prepared CUDA or not?" OFF)
@@ -40,11 +48,12 @@ message(STATUS "GStreamer library status:")
 message(STATUS "    version: ${GST_VERSION}")
 message(STATUS "    libraries: ${GST_LIBRARIES} ${GSTAPP_LIBRARIES} ${GST_RTSP_LIBRARIES}")
 message(STATUS "    include path: ${GST_INCLUDE_DIRS}")
-include_directories(${GST_INCLUDE_DIRS})
+include_directories(${GST_INCLUDE_DIRS} ${GSTAPP_INCLUDE_DIRS} ${GST_RTSP_INCLUDE_DIRS})
+link_directories(${GST_LIBRARY_DIRS} ${GSTAPP_LIBRARY_DIRS} ${GST_RTSP_LIBRARY_DIRS})
 set (GST_DEPEND_LIBS ${GST_LIBRARIES} ${GSTAPP_LIBRARIES} ${GST_RTSP_LIBRARIES})
 
 # collect dependent libs for videopipe
-list(APPEND VP_DEPEND_LIBS ${OpenCV_LIBS} ${GST_DEPEND_LIBS} stdc++fs)
+list(APPEND VP_DEPEND_LIBS ${OpenCV_LIBS} ${GST_DEPEND_LIBS})
 
 # optional for CUDA
 if(VP_WITH_CUDA) # CUDA enabled

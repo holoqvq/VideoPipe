@@ -6,7 +6,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 
 # build for tinyexpr
 add_library(${PROJECT_NAME} SHARED "tinyexpr.c")
-target_link_libraries(${PROJECT_NAME} m)
+
+if(UNIX)
+    target_link_libraries(${PROJECT_NAME} m)
+endif()
 
 # build samples for tinyexpr
 if(NOT DEFINED VP_BUILD_FROM)

@@ -4,9 +4,7 @@
 #ifdef VP_WITH_LLM
 namespace vp_nodes {
         
-    vp_mllm_osd_node::vp_mllm_osd_node(std::string node_name, std::string font): vp_node(node_name) {
-        ft2 = cv::freetype::createFreeType2();
-        ft2->loadFontData(font, 0);
+    vp_mllm_osd_node::vp_mllm_osd_node(std::string node_name): vp_node(node_name) {
         this->initialized();
     }
     
@@ -30,7 +28,6 @@ namespace vp_nodes {
         }
 
         auto& canvas = meta->osd_frame;
-        //ft2->putText(canvas, meta->description, cv::Point(10, meta->frame.rows + gap_height + padding * 2), 20, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA, true);
         draw_text_in_rect(canvas, meta->description, cv::Rect(5, meta->frame.rows + 5, meta->frame.cols - 10, gap_height + padding * 2 - 10), 20, cv::Scalar(255, 0, 0));
 
         // log using INFO level
@@ -61,18 +58,19 @@ namespace vp_nodes {
         std::vector<std::string> chars = utf8_split(text);
         std::string currentLine;
         int baseline = 0;
+        const double font_scale = fontHeight / 30.0;
 
         int y = rect.y;
 
         for (size_t i = 0; i < chars.size(); i++) {
             std::string tempLine = currentLine + chars[i];
-            cv::Size textSize = ft2->getTextSize(tempLine, fontHeight, -1, &baseline);
+            cv::Size textSize = cv::getTextSize(tempLine, cv::FONT_HERSHEY_SIMPLEX, font_scale, 1, &baseline);
 
             if (textSize.width > rect.width && !currentLine.empty()) {
                 int drawY = y + textSize.height;
                 if (drawY > rect.y + rect.height) break;
-                ft2->putText(img, currentLine, cv::Point(rect.x, drawY),
-                            fontHeight, color, -1, 8, true);
+                cv::putText(img, currentLine, cv::Point(rect.x, drawY),
+                            cv::FONT_HERSHEY_SIMPLEX, font_scale, color, 1, cv::LINE_AA);
                 y += textSize.height + 5;
                 currentLine.clear();
             }
@@ -80,10 +78,10 @@ namespace vp_nodes {
         }
 
         if (!currentLine.empty()) {
-            int drawY = y + ft2->getTextSize(currentLine, fontHeight, -1, &baseline).height;
+            int drawY = y + cv::getTextSize(currentLine, cv::FONT_HERSHEY_SIMPLEX, font_scale, 1, &baseline).height;
             if (drawY <= rect.y + rect.height) {
-                ft2->putText(img, currentLine, cv::Point(rect.x, drawY),
-                            fontHeight, color, -1, 8, true);
+                cv::putText(img, currentLine, cv::Point(rect.x, drawY),
+                            cv::FONT_HERSHEY_SIMPLEX, font_scale, color, 1, cv::LINE_AA);
             }
         }
     }

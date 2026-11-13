@@ -24,7 +24,7 @@ int main() {
     VP_SET_LOG_DIR("./log");
 
     // config log level
-    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::DEBUG);
+    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::Debug);
 
     // config for kafka, ignored automatically if not prepared for kafka
     VP_SET_LOG_TO_KAFKA(true);  // false by default if not set

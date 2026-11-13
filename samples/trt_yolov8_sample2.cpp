@@ -18,7 +18,7 @@ int main() {
     auto file_src_0 = std::make_shared<vp_nodes::vp_file_src_node>("file_src_0", 0, "./vp_data/test_video/mask_rcnn.mp4");
     auto yolo8_detector = std::make_shared<vp_nodes::vp_trt_yolov8_detector>("yolo8_detector", "./vp_data/models/trt/others/yolov8s_v8.5.engine", "./vp_data/models/coco_80classes.txt");
     auto yolo8_classifier = std::make_shared<vp_nodes::vp_trt_yolov8_classifier>("yolo8_classifier", "./vp_data/models/trt/others/yolov8s-cls_v8.5.engine", "./vp_data/models/imagenet_1000labels1.txt");
-    auto osd = std::make_shared<vp_nodes::vp_osd_node_v3>("osd", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd = std::make_shared<vp_nodes::vp_osd_node_v3>("osd");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
 
     // construct pipeline

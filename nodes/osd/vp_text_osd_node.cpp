@@ -3,9 +3,7 @@
 
 namespace vp_nodes {
         
-    vp_text_osd_node::vp_text_osd_node(std::string node_name, std::string font): vp_node(node_name) {
-        ft2 = cv::freetype::createFreeType2();
-        ft2->loadFontData(font, 0);
+    vp_text_osd_node::vp_text_osd_node(std::string node_name): vp_node(node_name) {
         this->initialized();
     }
     
@@ -38,7 +36,7 @@ namespace vp_nodes {
             cv::polylines(canvas1, ppt, npt, 1, 1, CV_RGB(0, 255, 0), 2, cv::LINE_AA, 0);
             cv::polylines(canvas2, ppt, npt, 1, 1, CV_RGB(0, 255, 0), 1, cv::LINE_AA, 0);
             
-            ft2->putText(canvas2, text->text, rook_points[3], 20, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA, true);
+            cv::putText(canvas2, text->text, rook_points[3], cv::FONT_HERSHEY_SIMPLEX, 0.67, cv::Scalar(255, 0, 0), 1, cv::LINE_AA);
         }
 
         // copy back to osd frame

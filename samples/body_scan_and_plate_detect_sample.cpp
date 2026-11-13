@@ -25,7 +25,7 @@ int main() {
                                                                                     "./vp_data/models/trt/plate/det_v8.5.trt", 
                                                                                     "./vp_data/models/trt/plate/rec_v8.5.trt");
     auto osd_0 = std::make_shared<vp_nodes::vp_osd_node>("osd_0");
-    auto osd_1 = std::make_shared<vp_nodes::vp_plate_osd_node>("osd_1", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd_1 = std::make_shared<vp_nodes::vp_plate_osd_node>("osd_1");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
     auto screen_des_1 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_1", 1);
 

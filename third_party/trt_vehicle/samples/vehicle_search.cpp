@@ -1,5 +1,5 @@
 #include <opencv2/core/core.hpp>
-#include <opencv2/freetype.hpp>
+#include <opencv2/imgproc.hpp>
 #include <string>
 #include <vector>
 #include <memory>
@@ -95,8 +95,6 @@ void search(std::vector<float>& query_feature,
 int main() {
     auto vehicle_dataset_dir = "./vp_data/test_images/vehicle_feature";
     auto query_vehicle_path = "./vp_data/test_images/vehicle_feature/7_002.jpg";
-    auto ft2 = cv::freetype::createFreeType2();
-    ft2->loadFontData("./vp_data/font/NotoSansCJKsc-Medium.otf", 0);
 
     // load vehicle dataset 
     std::vector<std::pair<std::string, std::vector<float>>> features_set;
@@ -129,7 +127,7 @@ int main() {
     cv::Mat query_vehicle_img_tmp;
     cv::resize(query_vehicle_img, query_vehicle_img_tmp, cv::Size(rect_w_h, rect_w_h));
     query_vehicle_img_tmp.copyTo(roi_query);
-    ft2->putText(canvas, "query vehicle:", cv::Point(20, 14), 14, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA, true);
+    cv::putText(canvas, "query vehicle:", cv::Point(20, 14), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0), 1, cv::LINE_AA);
 
     // query result
     for(int i = 0; i < query_result.size(); ++i) {
@@ -141,7 +139,7 @@ int main() {
         cv::resize(vehicle_img, vehicle_img_tmp, cv::Size(rect_w_h, rect_w_h));
         vehicle_img_tmp.copyTo(roi);
 
-        ft2->putText(canvas, std::to_string(std::max(query_result[i].second, 0.0f)), cv::Point(gap + col * (rect_w_h + gap), row * (rect_w_h + gap) + gap), 14, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA, true);
+        cv::putText(canvas, std::to_string(std::max(query_result[i].second, 0.0f)), cv::Point(gap + col * (rect_w_h + gap), row * (rect_w_h + gap) + gap), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0), 1, cv::LINE_AA);
     }
 
     cv::imshow("search result", canvas);

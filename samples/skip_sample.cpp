@@ -14,7 +14,7 @@
 */
 
 int main() {
-    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::INFO);
+    VP_SET_LOG_LEVEL(vp_utils::vp_log_level::Info);
     VP_LOGGER_INIT();
 
     // create nodes
@@ -22,7 +22,7 @@ int main() {
     auto rtsp_src_1 = std::make_shared<vp_nodes::vp_rtsp_src_node>("rtsp_src_1", 1, "rtsp://admin:admin12345@192.168.3.157", 0.4, "avdec_h264", 2);  // skip 2 frames every 3 frames
     auto yolo_detector = std::make_shared<vp_nodes::vp_yolo_detector_node>("yolo_detector", "./vp_data/models/det_cls/yolov3-tiny-2022-0721_best.weights", "./vp_data/models/det_cls/yolov3-tiny-2022-0721.cfg", "./vp_data/models/det_cls/yolov3_tiny_5classes.txt");
     auto split = std::make_shared<vp_nodes::vp_split_node>("split", true);
-    auto osd = std::make_shared<vp_nodes::vp_osd_node>("osd", "./vp_data/font/NotoSansCJKsc-Medium.otf");
+    auto osd = std::make_shared<vp_nodes::vp_osd_node>("osd");
     auto screen_des_0 = std::make_shared<vp_nodes::vp_screen_des_node>("screen_des_0", 0);
     auto rtmp_des_1 = std::make_shared<vp_nodes::vp_rtmp_des_node>("rtmp_des_0", 1, "rtmp://192.168.77.60/live/10000");
 

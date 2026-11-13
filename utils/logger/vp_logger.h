@@ -16,10 +16,10 @@
 namespace vp_utils {
     // log levels
     enum vp_log_level {
-        ERROR = 1,
-        WARN = 2,
-        INFO = 3,
-        DEBUG = 4
+        Error = 1,
+        Warn = 2,
+        Info = 3,
+        Debug = 4
     };
 
     // a lightweight logger for VideoPipe, architecture: N producer * 1 consumer.
@@ -58,24 +58,21 @@ namespace vp_utils {
         vp_utils::vp_log_kafka_writer kafka_writer;
         #endif
 
-        const std::map<vp_log_level, std::string> log_level_names = {{ERROR, "Error"},
-                                                                    {WARN, "Warn "},
-                                                                    {INFO, "Info "},
-                                                                    {DEBUG, "Debug"}};
+        const std::map<vp_log_level, std::string> log_level_names = {{Error, "Error"},
+                                                                    {Warn, "Warn "},
+                                                                    {Info, "Info "},
+                                                                    {Debug, "Debug"}};
     public:
         // non-copable
         vp_logger(const vp_logger&) = delete;
         vp_logger& operator=(const vp_logger&) = delete;
 
         // singleton
-        static vp_logger& get_logger() {
-            static vp_logger logger;
-            return logger;
-        }
+        static vp_logger& get_logger();
         ~vp_logger();
 
         // CONFIG
-        vp_log_level log_level = vp_log_level::DEBUG; // filter
+        vp_log_level log_level = vp_log_level::Debug; // filter
         std::string log_dir = "./log";                // folder saving log file
         std::string kafka_servers_and_topic = "127.0.0.1:9092/vp_log";    // kafka servers and topic, splited by `/`. multiple servers splited by `,`
         const std::string log_file_name_template = "<year>-<mon>-<day>.txt";
@@ -115,7 +112,7 @@ namespace vp_utils {
     #define VP_SET_LOG_DIR(_log_dir) vp_utils::vp_logger::get_logger().log_dir = _log_dir
     #define VP_SET_LOG_KAFKA_SERVERS_AND_TOPIC(_kafka_servers_and_topic) vp_utils::vp_logger::get_logger().kafka_servers_and_topic = _kafka_servers_and_topic
     #define VP_SET_LOG_TO_CONSOLE(_log_to_console) vp_utils::vp_logger::get_logger().log_to_console = _log_to_console
-    #define VP_SET_LOG_TO_FILE(_log_to_file) vp_utils::vp_logger::get_logger().log_to_console = _log_to_file
+    #define VP_SET_LOG_TO_FILE(_log_to_file) vp_utils::vp_logger::get_logger().log_to_file = _log_to_file
     #define VP_SET_LOG_TO_KAFKA(_log_to_kafka) vp_utils::vp_logger::get_logger().log_to_kafka = _log_to_kafka
     #define VP_SET_LOG_INCLUDE_LEVEL(_include_level) vp_utils::vp_logger::get_logger().include_level = _include_level
     #define VP_SET_LOG_INCLUDE_CODE_LOCATION(_include_code_location) vp_utils::vp_logger::get_logger().include_code_location = _include_code_location
@@ -127,10 +124,10 @@ namespace vp_utils {
     // use vp_utils::string_format to format log content first if need
     // example: 
     // VP_ERROR(vp_utils::string_format("message is %s at %d", s, d));
-    #define VP_ERROR(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::ERROR, message, __FILE__, __LINE__)
-    #define VP_WARN(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::WARN, message, __FILE__, __LINE__)
-    #define VP_INFO(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::INFO, message, __FILE__, __LINE__)
-    #define VP_DEBUG(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::DEBUG, message, __FILE__, __LINE__)
+    #define VP_ERROR(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::Error, message, __FILE__, __LINE__)
+    #define VP_WARN(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::Warn, message, __FILE__, __LINE__)
+    #define VP_INFO(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::Info, message, __FILE__, __LINE__)
+    #define VP_DEBUG(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::Debug, message, __FILE__, __LINE__)
 
     // init Macros
     #define VP_LOGGER_INIT() vp_utils::vp_logger::get_logger().init()

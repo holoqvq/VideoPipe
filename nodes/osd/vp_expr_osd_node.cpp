@@ -6,10 +6,7 @@
 
 namespace vp_nodes {
     
-    vp_expr_osd_node::vp_expr_osd_node(std::string node_name, std::string font):vp_node(node_name) {
-        assert(font != "");
-        ft2 = cv::freetype::createFreeType2();
-        ft2->loadFontData(font, 0);    
+    vp_expr_osd_node::vp_expr_osd_node(std::string node_name):vp_node(node_name) {
         this->initialized();  
     }
     
@@ -36,16 +33,16 @@ namespace vp_nodes {
 
             if (i->flags.find("yes") != std::string::npos) {
                 cv::polylines(canvas, ppt, npt, 1, 1, CV_RGB(0, 255, 0), 2, cv::LINE_AA, 0);   // green
-                ft2->putText(canvas, "√", rook_points[1], 30, CV_RGB(0, 255, 0), cv::FILLED, cv::LINE_AA, true);
+                cv::putText(canvas, "√", rook_points[1], cv::FONT_HERSHEY_SIMPLEX, 1.0, CV_RGB(0, 255, 0), 1, cv::LINE_AA);
             }
             else if (i->flags.find("no") != std::string::npos) {
                 auto right_value = vp_utils::string_split(i->flags, '_')[1];
                 cv::polylines(canvas, ppt, npt, 1, 1, CV_RGB(255, 0, 0), 2, cv::LINE_AA, 0);   // red
-                ft2->putText(canvas, "×(" + right_value + ")", rook_points[1], 30, CV_RGB(255, 0, 0), cv::FILLED, cv::LINE_AA, true);
+                cv::putText(canvas, "×(" + right_value + ")", rook_points[1], cv::FONT_HERSHEY_SIMPLEX, 1.0, CV_RGB(255, 0, 0), 1, cv::LINE_AA);
             }
             else if (i->flags == "invalid") {
                 cv::polylines(canvas, ppt, npt, 1, 1, CV_RGB(255, 165, 0), 2, cv::LINE_AA, 0); // orange
-                ft2->putText(canvas, "invalid", rook_points[1], 30, CV_RGB(255, 165, 0), cv::FILLED, cv::LINE_AA, true);
+                cv::putText(canvas, "invalid", rook_points[1], cv::FONT_HERSHEY_SIMPLEX, 1.0, CV_RGB(255, 165, 0), 1, cv::LINE_AA);
             }
             else {
                 // to-do

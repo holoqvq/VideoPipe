@@ -6,11 +6,7 @@
 
 namespace vp_nodes {
     
-    vp_osd_node_v2::vp_osd_node_v2(std::string node_name, std::string font):vp_node(node_name) {
-        if (!font.empty()) {
-            ft2 = cv::freetype::createFreeType2();
-            ft2->loadFontData(font, 0);   
-        }     
+    vp_osd_node_v2::vp_osd_node_v2(std::string node_name):vp_node(node_name) {
         this->initialized();  
     }
     
@@ -71,8 +67,7 @@ namespace vp_nodes {
                 // !!!
                 // for plate sub target (color_text)
                 if (sub_label.size() == 2) {
-                    assert(ft2 != nullptr);
-                    ft2->putText(canvas, sub_label[1], cv::Point(base_left + 10, meta->osd_frame.rows - padding - 5), 36, cv::Scalar(0), cv::FILLED, cv::LINE_AA, true);
+                    cv::putText(canvas, sub_label[1], cv::Point(base_left + 10, meta->osd_frame.rows - padding - 5), cv::FONT_HERSHEY_SIMPLEX, 1.2, cv::Scalar(0), 1, cv::LINE_AA);
                 }
                 base_left += gap_height + padding;                
             }
@@ -84,12 +79,7 @@ namespace vp_nodes {
             }
             
             cv::rectangle(canvas, cv::Rect(target->x, target->y, target->width, target->height), cv::Scalar(255, 255, 0), 3);
-            if (ft2 != nullptr) {
-                ft2->putText(canvas, labels_to_display, cv::Point(target->x, target->y), 25, cv::Scalar(255, 0, 255), cv::FILLED, cv::LINE_AA, true);
-            }
-            else {               
-                cv::putText(canvas, labels_to_display, cv::Point(target->x, target->y), 1, 1, cv::Scalar(255, 0, 255));
-            }
+            cv::putText(canvas, labels_to_display, cv::Point(target->x, target->y), 1, 1, cv::Scalar(255, 0, 255));
         }
         return meta;
     }

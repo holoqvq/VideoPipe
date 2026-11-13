@@ -6,7 +6,6 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
-#include <opencv2/freetype.hpp>
 #include <iostream>
 #include <vector>
 
@@ -25,8 +24,6 @@ int main(int argc, char **argv) {
 
   auto video_path = "./vp_data/test_video/ocr.mp4";
   auto capture = cv::VideoCapture(video_path);
-  auto ft2 = cv::freetype::createFreeType2();
-  ft2->loadFontData("./vp_data/font/NotoSansCJKsc-Medium.otf", 0);
 
   while (true) {
     cv::Mat frame;
@@ -66,7 +63,7 @@ int main(int argc, char **argv) {
       cv::polylines(frame1, ppt, npt, 1, 1, CV_RGB(0, 255, 0), 2, cv::LINE_AA, 0);
       cv::polylines(frame2, ppt, npt, 1, 1, CV_RGB(0, 255, 0), 1, cv::LINE_AA, 0);
       //cv::putText(img_vis, ocr_result[n].text, rook_points[0], 1, 0.8, CV_RGB(0, 255, 0));
-      ft2->putText(frame2, ocr_result[n].text, rook_points[3], 20, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA, true);
+      cv::putText(frame2, ocr_result[n].text, rook_points[3], cv::FONT_HERSHEY_SIMPLEX, 0.67, cv::Scalar(255, 0, 0), 1, cv::LINE_AA);
     }
 
     auto roi1 = img_vis(cv::Rect(0, 0, frame.cols, frame.rows));

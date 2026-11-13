@@ -1,5 +1,5 @@
 #include <opencv2/core/core.hpp>
-#include <opencv2/freetype.hpp>
+#include <opencv2/imgproc.hpp>
 #include <string>
 #include <vector>
 
@@ -36,9 +36,6 @@ int main() {
     auto image2 = cv::imread("./vp_data/test_images/vehicle_feature/2_003.jpg");  // second vehicle to compare(the same vehicle with different angle)
     auto image3 = cv::imread("./vp_data/test_images/vehicle_feature/5_002.jpg");  // third vehicle to compare(not the same vehicle)
     auto vehicleEncoder = new trt_vehicle::VehicleFeatureEncoder(featureModelPath);
-
-    auto ft2 = cv::freetype::createFreeType2();
-    ft2->loadFontData("./vp_data/font/NotoSansCJKsc-Medium.otf", 0);
 
     std::vector<std::vector<float>> results;
     std::vector<cv::Mat> img_datas = {image, image2, image3};
@@ -87,8 +84,8 @@ int main() {
 
     cv::line(canvas, cv::Point(canvas.cols / 2, 10 + image.rows), cv::Point(10 + image2.cols / 2, 10 + image.rows + 50), cv::Scalar(255, 0, 0));
     cv::line(canvas, cv::Point(canvas.cols / 2, 10 + image.rows), cv::Point(canvas.cols / 2 + 25 + image3.cols / 2, 10 + image.rows + 50), cv::Scalar(255, 0, 0));
-    ft2->putText(canvas, "相似度：" + std::to_string(similiarity_1_2), cv::Point(10, 10 + image.rows + 25), 20, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA, true);
-    ft2->putText(canvas, "相似度：" + std::to_string(similiarity_1_3), cv::Point(10 + image2.cols + 50, 10 + image.rows + 25), 20, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA, true);
+    cv::putText(canvas, "相似度：" + std::to_string(similiarity_1_2), cv::Point(10, 10 + image.rows + 25), cv::FONT_HERSHEY_SIMPLEX, 0.67, cv::Scalar(255, 0, 0), 1, cv::LINE_AA);
+    cv::putText(canvas, "相似度：" + std::to_string(similiarity_1_3), cv::Point(10 + image2.cols + 50, 10 + image.rows + 25), cv::FONT_HERSHEY_SIMPLEX, 0.67, cv::Scalar(255, 0, 0), 1, cv::LINE_AA);
 
     cv::imshow("compare result", canvas);
     cv::waitKey(0);
