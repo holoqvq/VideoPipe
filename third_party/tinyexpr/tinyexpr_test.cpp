@@ -1,6 +1,7 @@
 
 #include "tinyexpr.h"
 #include <iostream>
+#include <string>
 
 int main() {
     // change expression to whatever you like

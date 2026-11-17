@@ -2,8 +2,8 @@
 #include "../../third_party/bhtsne/tsne.h"
 
 namespace vp_nodes {
-    vp_cluster_node::vp_cluster_node(std::string node_name, 
-                        bool use_tSNE, 
+    vp_cluster_node::vp_cluster_node(std::string node_name,
+                        bool use_tSNE,
                         std::vector<std::string> s_labels_to_display,
                         int sampling_frequency,
                         int min_sampling_width,
@@ -20,31 +20,31 @@ namespace vp_nodes {
                         max_sample_num_per_category(max_sample_num_per_category) {
         this->initialized();
     }
-    
+
     vp_cluster_node::~vp_cluster_node() {
-        deinitialized();        
+        deinitialized();
     }
 
     // please refer to ../../third_party/trt_vehicle/main/vehicle_cluster.cpp
     void vp_cluster_node::reduce_dims_using_tsne(std::vector<std::vector<float>>& low_features,
-                                int no_dims, int max_iter, double perplexity, 
-                                double theta, int rand_seed, bool skip_random_init, 
+                                int no_dims, int max_iter, double perplexity,
+                                double theta, int rand_seed, bool skip_random_init,
                                 int stop_lying_iter, int mom_switch_iter) {
         assert(cache_high_features.size() != 0);
         auto N = cache_high_features.size();
         auto D = cache_high_features[0].second.size();  // all the same as the first feature's dims
 
         // prepare input
-        double data[N * D];
-        double Y[N * no_dims];
+        std::vector<double> data(N * D);
+        std::vector<double> Y(N * no_dims);
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < D; j++) {
                 data[i * D + j] = cache_high_features[i].second[j];
             }
         }
-        
+
         // call t-SNE
-        TSNE::run(data, N, D, Y, no_dims, perplexity, theta, rand_seed, skip_random_init, max_iter, stop_lying_iter, mom_switch_iter);
+        TSNE::run(data.data(), N, D, Y.data(), no_dims, perplexity, theta, rand_seed, skip_random_init, max_iter, stop_lying_iter, mom_switch_iter);
 
         // prepare output
         for (int i = 0; i < N; i++) {
@@ -63,14 +63,14 @@ namespace vp_nodes {
             return meta;
         }
         last_sampling_time = NOW;
-        
+
         /* t-SNE */
         if (use_tSNE) {
             for (int i = 0; i < meta->targets.size(); i++) {
                 if (meta->targets[i]->width < min_sampling_width || meta->targets[i]->height < min_sampling_height) {
                     continue;
                 }
-                
+
                 if (cache_high_features.size() >= max_sample_num_for_tsne) {
                     // too many cache, we need control number of samples
                     cache_high_features.erase(cache_high_features.begin());
@@ -150,7 +150,7 @@ namespace vp_nodes {
                     }
                 }
 
-                if (filter_pass) {                
+                if (filter_pass) {
                     // too many cache, we need control number of samples
                     if (cache_categories[category].size() >= max_sample_num_per_category) {
                         cache_categories[category].erase(cache_categories[category].begin());
@@ -160,7 +160,7 @@ namespace vp_nodes {
         }
         // display on screen
         // calculate total number of rows
-        auto rows_num = 0; 
+        auto rows_num = 0;
         for (auto& p: cache_categories) {
             auto num = p.second.size() / category_num_per_row;
             if (p.second.size() % category_num_per_row != 0 || num == 0) {
@@ -168,7 +168,7 @@ namespace vp_nodes {
             }
             rows_num += num;
         }
-        
+
         // draw on (category_canvas_w) * (category_canvas_h)
         auto category_canvas_w = (category_thumbnail_w_h + category_gap) * (category_num_per_row + 1);
         auto category_canvas_h = (category_thumbnail_w_h + category_gap) * (rows_num + 1);
@@ -193,7 +193,7 @@ namespace vp_nodes {
                     col_index = 0;
                     row_index ++;
                     new_row = true;
-                } 
+                }
                 else {
                     new_row = false;
                 }

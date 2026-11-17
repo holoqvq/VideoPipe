@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <experimental/filesystem>
+#include <filesystem>
 
 #include "../models/vehicle_feature_encoder.h"
 #include "../../../utils/vp_utils.h"
@@ -50,14 +50,14 @@ void extract_feature(std::string vehicle_img_path, std::vector<float>& feature) 
     }
 }
 
-// load all vehicle images (.jpg) from disk and extract all features 
-void load_vehicle_dataset(std::string dataset_dir, 
+// load all vehicle images (.jpg) from disk and extract all features
+void load_vehicle_dataset(std::string dataset_dir,
                         std::vector<std::pair<std::string, std::vector<float>>>& features_set) {
     features_set.clear();
     // iterate directory
-    using recursive_directory_iterator = std::experimental::filesystem::recursive_directory_iterator;
+    using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
     for (const auto& dir_entry : recursive_directory_iterator(dataset_dir))
-        if (vp_utils::ends_with(dir_entry.path(), ".jpg")) {    
+        if (vp_utils::ends_with(dir_entry.path(), ".jpg")) {
             std::cout << "load vehicle image: " << dir_entry << std::endl;
 
             // extract single feature
@@ -70,8 +70,8 @@ void load_vehicle_dataset(std::string dataset_dir,
 }
 
 // match features using query feature, sorted by similiarity
-void search(std::vector<float>& query_feature, 
-            std::vector<std::pair<std::string, std::vector<float>>>& features_set, 
+void search(std::vector<float>& query_feature,
+            std::vector<std::pair<std::string, std::vector<float>>>& features_set,
             std::vector<std::pair<std::string, float>>& query_result,
             int dis_type = 0,
             int top_n = 0) {
@@ -84,7 +84,7 @@ void search(std::vector<float>& query_feature,
         std::pair<std::string, float> p {i.first, dis};
         query_result.push_back(p);
     }
-    
+
     // sort from high to low
     sort(query_result.begin(), query_result.end(), [=](std::pair<std::string, float>& a, std::pair<std::string, float>& b)
     {
@@ -98,7 +98,7 @@ int main() {
     auto ft2 = cv::freetype::createFreeType2();
     ft2->loadFontData("./vp_data/font/NotoSansCJKsc-Medium.otf", 0);
 
-    // load vehicle dataset 
+    // load vehicle dataset
     std::vector<std::pair<std::string, std::vector<float>>> features_set;
     load_vehicle_dataset(vehicle_dataset_dir, features_set);
 
@@ -119,10 +119,10 @@ int main() {
     auto n_query = query_result.size();
     auto rect_w_h = 80; auto gap = 20; auto cols = 10;
     auto rows = n_query / cols + 2;
-    
+
     // create canvas
     cv::Mat canvas(rows * (rect_w_h + gap) + gap, cols * (rect_w_h + gap) + gap, CV_8UC3,cv::Scalar(127, 127, 127));
-    
+
     // query vehicle at first line
     cv::Mat roi_query = cv::Mat(canvas, cv::Rect(gap, gap, rect_w_h, rect_w_h));
     auto query_vehicle_img = cv::imread(query_vehicle_path);

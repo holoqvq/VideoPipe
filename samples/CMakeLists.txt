@@ -4,6 +4,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 message("start build for simple samples...")
+link_libraries(${VP_DEPEND_LIBS})
 # save all exe to 'build/bin'
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 add_executable(1-1-1_sample "1-1-1_sample.cpp")
@@ -102,16 +103,16 @@ target_link_libraries(vp_test ${PROJECT_NAME})
 # samples depend on Kafka
 if(VP_WITH_KAFKA)
     add_executable(message_broker_kafka_sample "message_broker_kafka_sample.cpp")
-    target_link_libraries(message_broker_kafka_sample ${PROJECT_NAME})    
+    target_link_libraries(message_broker_kafka_sample ${PROJECT_NAME})
 endif()
 
 # samples depend on LLM
 if(VP_WITH_LLM)
     add_executable(mllm_analyse_sample "mllm_analyse_sample.cpp")
-    target_link_libraries(mllm_analyse_sample ${PROJECT_NAME})    
+    target_link_libraries(mllm_analyse_sample ${PROJECT_NAME})
 
     add_executable(mllm_analyse_sample_openai "mllm_analyse_sample_openai.cpp")
-    target_link_libraries(mllm_analyse_sample_openai ${PROJECT_NAME})    
+    target_link_libraries(mllm_analyse_sample_openai ${PROJECT_NAME})
 endif()
 
 # samples depend on FFmpeg
@@ -127,7 +128,7 @@ endif()
 if(VP_WITH_PADDLE)
     add_executable(app_src_sample "app_src_sample.cpp")
     target_link_libraries(app_src_sample ${PROJECT_NAME})
-    
+
     add_executable(paddle_infer_sample "paddle_infer_sample.cpp")
     target_link_libraries(paddle_infer_sample ${PROJECT_NAME})
 endif()
@@ -136,7 +137,7 @@ endif()
 if(VP_WITH_CUDA)
     # nvdec & nvenc plugins required from DeepStream
     add_executable(nv_hard_codec_sample "nv_hard_codec_sample.cpp")
-    target_link_libraries(nv_hard_codec_sample ${PROJECT_NAME})    
+    target_link_libraries(nv_hard_codec_sample ${PROJECT_NAME})
 endif()
 
 # samples depend on TensorRT
@@ -154,7 +155,7 @@ if(VP_WITH_TRT)
     target_link_libraries(dynamic_pipeline_sample ${PROJECT_NAME})
 
     add_executable(dynamic_pipeline_sample2 "dynamic_pipeline_sample2.cpp")
-    target_link_libraries(dynamic_pipeline_sample2 ${PROJECT_NAME})    
+    target_link_libraries(dynamic_pipeline_sample2 ${PROJECT_NAME})
 
     add_executable(message_broker_sample2 "message_broker_sample2.cpp")
     target_link_libraries(message_broker_sample2 ${PROJECT_NAME})
@@ -206,7 +207,7 @@ if(VP_BUILD_COMPLEX_SAMPLES)
     add_executable(face_recognize_pipeline "face_recognize/face_recognize_pipeline.cpp")
     target_link_libraries(face_recognize_pipeline ${PROJECT_NAME})
 
-    if(VP_WITH_TRT) # samples depend on TensorRT   
+    if(VP_WITH_TRT) # samples depend on TensorRT
         # save exe to 'similiarity_search'
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/similiarity_search)
         add_executable(face_encoding_pipeline "similiarity_search/face_encoding_pipeline.cpp")
@@ -234,7 +235,7 @@ if(VP_BUILD_COMPLEX_SAMPLES)
         # save exe to 'math_review'
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/math_review)
         add_executable(math_expression_check_pipeline "math_review/math_expression_check_pipeline.cpp")
-        target_link_libraries(math_expression_check_pipeline ${PROJECT_NAME}) 
+        target_link_libraries(math_expression_check_pipeline ${PROJECT_NAME})
     endif()
-    
+
 endif()

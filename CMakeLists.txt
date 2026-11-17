@@ -10,7 +10,6 @@ project(video_pipe VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fPIC -w -fdiagnostics-color=always -pthread")
 # save all libs(including third_party's) to 'libs'
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 
@@ -41,10 +40,12 @@ message(STATUS "    version: ${GST_VERSION}")
 message(STATUS "    libraries: ${GST_LIBRARIES} ${GSTAPP_LIBRARIES} ${GST_RTSP_LIBRARIES}")
 message(STATUS "    include path: ${GST_INCLUDE_DIRS}")
 include_directories(${GST_INCLUDE_DIRS})
+# MSVC has no default library search path for GStreamer, so pass it explicitly.
+link_directories(${GST_LIBRARY_DIRS} ${GSTAPP_LIBRARY_DIRS} ${GST_RTSP_LIBRARY_DIRS})
 set (GST_DEPEND_LIBS ${GST_LIBRARIES} ${GSTAPP_LIBRARIES} ${GST_RTSP_LIBRARIES})
 
 # collect dependent libs for videopipe
-list(APPEND VP_DEPEND_LIBS ${OpenCV_LIBS} ${GST_DEPEND_LIBS} stdc++fs)
+list(APPEND VP_DEPEND_LIBS ${OpenCV_LIBS} ${GST_DEPEND_LIBS})
 
 # optional for CUDA
 if(VP_WITH_CUDA) # CUDA enabled
@@ -66,7 +67,7 @@ if(VP_WITH_TRT)  # TensorRT enabled
     message(STATUS "    include path: ${VP_TRT_INC_PATH}")
     message(STATUS "    library path: ${VP_TRT_LIB_PATH}")
     message("--------------end build trt_vehicle---------------")
-    # trt_yolov8    
+    # trt_yolov8
     message("-------------start build trt_yolov8--------------")
     add_subdirectory(third_party/trt_yolov8)
     list(APPEND VP_DEPEND_LIBS trt_yolov8)
@@ -165,7 +166,20 @@ list(APPEND VP_CPPS_SOURCES ${NODES} ${OBJECTS} ${UTILS})
 
 # build for videopipe
 add_library(${PROJECT_NAME} SHARED ${VP_CPPS_SOURCES})
-target_link_libraries(${PROJECT_NAME} ${VP_DEPEND_LIBS})
+if(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /Zi /W0 /utf-8)
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -g -fPIC -w -fdiagnostics-color=always)
+endif()
+
+find_package(Threads REQUIRED)
+list(APPEND VP_DEPEND_LIBS Threads::Threads)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${VP_DEPEND_LIBS})
 
 # build for samples
 add_subdirectory(samples)

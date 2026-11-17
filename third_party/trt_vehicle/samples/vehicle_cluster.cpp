@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <experimental/filesystem>
+#include <filesystem>
 
 #include "../models/vehicle_feature_encoder.h"
 #include "../../../utils/vp_utils.h"
@@ -32,14 +32,14 @@ void extract_feature(std::string vehicle_img_path, std::vector<float>& feature) 
     }
 }
 
-// load all vehicle images (.jpg) from disk and extract all features 
-void load_vehicle_dataset(std::string dataset_dir, 
+// load all vehicle images (.jpg) from disk and extract all features
+void load_vehicle_dataset(std::string dataset_dir,
                         std::vector<std::pair<std::string, std::vector<float>>>& features_set) {
     features_set.clear();
     // iterate directory
-    using recursive_directory_iterator = std::experimental::filesystem::recursive_directory_iterator;
+    using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
     for (const auto& dir_entry : recursive_directory_iterator(dataset_dir))
-        if (vp_utils::ends_with(dir_entry.path(), ".jpg")) {    
+        if (vp_utils::ends_with(dir_entry.path(), ".jpg")) {
             std::cout << "load vehicle image: " << dir_entry << std::endl;
 
             // extract single feature
@@ -68,7 +68,7 @@ void reduce_dims(std::vector<std::pair<std::string, std::vector<float>>>& featur
             data[i * D + j] = features_set[i].second[j];
         }
     }
-    
+
     // call t-SNE
     TSNE::run(data, N, D, Y, no_dims, perplexity, theta, rand_seed, skip_random_init, max_iter, stop_lying_iter, mom_switch_iter);
 
@@ -89,7 +89,7 @@ int main() {
     auto ft2 = cv::freetype::createFreeType2();
     ft2->loadFontData("./vp_data/font/NotoSansCJKsc-Medium.otf", 0);
 
-    // load vehicle dataset 
+    // load vehicle dataset
     std::vector<std::pair<std::string, std::vector<float>>> features_set;
     load_vehicle_dataset(vehicle_dataset_dir, features_set);
 

@@ -90,7 +90,7 @@ namespace vp_utils {
 
         // watch
         int log_cache_warn_threshold = 100;           // warning if cache size greater than threshold
-        
+
         // where
         bool log_to_console = true;                   // to console
         bool log_to_file = true;                      // to file
@@ -115,17 +115,17 @@ namespace vp_utils {
     #define VP_SET_LOG_DIR(_log_dir) vp_utils::vp_logger::get_logger().log_dir = _log_dir
     #define VP_SET_LOG_KAFKA_SERVERS_AND_TOPIC(_kafka_servers_and_topic) vp_utils::vp_logger::get_logger().kafka_servers_and_topic = _kafka_servers_and_topic
     #define VP_SET_LOG_TO_CONSOLE(_log_to_console) vp_utils::vp_logger::get_logger().log_to_console = _log_to_console
-    #define VP_SET_LOG_TO_FILE(_log_to_file) vp_utils::vp_logger::get_logger().log_to_console = _log_to_file
+    #define VP_SET_LOG_TO_FILE(_log_to_file) vp_utils::vp_logger::get_logger().log_to_file = _log_to_file
     #define VP_SET_LOG_TO_KAFKA(_log_to_kafka) vp_utils::vp_logger::get_logger().log_to_kafka = _log_to_kafka
     #define VP_SET_LOG_INCLUDE_LEVEL(_include_level) vp_utils::vp_logger::get_logger().include_level = _include_level
     #define VP_SET_LOG_INCLUDE_CODE_LOCATION(_include_code_location) vp_utils::vp_logger::get_logger().include_code_location = _include_code_location
     #define VP_SET_LOG_INCLUDE_THREAD_ID(_include_thread_id) vp_utils::vp_logger::get_logger().include_thread_id = _include_thread_id
     #define VP_SET_LOG_CACHE_WARN_THRES(_log_cache_warn_threshold) vp_utils::vp_logger::get_logger().log_cache_warn_threshold = _log_cache_warn_threshold
     #define VP_SET_LOG_KEYWORDS_FOR_DEBUG(_keywords_for_debug_log) vp_utils::vp_logger::get_logger().keywords_for_debug_log = _keywords_for_debug_log
-    
+
     // log Macros
     // use vp_utils::string_format to format log content first if need
-    // example: 
+    // example:
     // VP_ERROR(vp_utils::string_format("message is %s at %d", s, d));
     #define VP_ERROR(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::ERROR, message, __FILE__, __LINE__)
     #define VP_WARN(message) vp_utils::vp_logger::get_logger().log(vp_utils::vp_log_level::WARN, message, __FILE__, __LINE__)

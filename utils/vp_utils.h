@@ -17,11 +17,10 @@ namespace vp_utils {
     // string format in C++17
     template<typename ... Args>
     inline string string_format(const string& format, Args ... args){
-        size_t size = 1 + snprintf(nullptr, 0, format.c_str(), args ...); 
-        // unique_ptr<char[]> buf(new char[size]);
-        char bytes[size];
-        snprintf(bytes, size, format.c_str(), args ...);
-        return string(bytes);
+        size_t size = 1 + snprintf(nullptr, 0, format.c_str(), args ...);
+        unique_ptr<char[]> buf(new char[size]);
+        snprintf(buf.get(), size, format.c_str(), args ...);
+        return string(buf.get());
     }
 
     // get optimal font scale depend on screen width and height
@@ -48,13 +47,13 @@ namespace vp_utils {
         if (corner_radius < 1) {
             corner_radius = 1;
         }
-        
+
         cv::Point p1 = top_left;
         cv::Point p2 = cv::Point (bottom_right.x, top_left.y);
         cv::Point p3 = bottom_right;
         cv::Point p4 = cv::Point (top_left.x, bottom_right.y);
 
-        // fill rounded rectangle 
+        // fill rounded rectangle
         if (thickness < 0) {
             cv::rectangle(src, cv::Rect(cv::Point (p1.x + corner_radius, p1.y), cv::Point (p3.x - corner_radius, p3.y)), fill_color, thickness);
             cv::rectangle(src, cv::Rect(cv::Point (p1.x, p1.y + corner_radius), cv::Point (p3.x, p3.y - corner_radius)), fill_color, thickness);
@@ -65,7 +64,7 @@ namespace vp_utils {
 
             thickness = 1;
         }
- 
+
         // draw straight lines
         cv::line(src, cv::Point (p1.x + corner_radius, p1.y), cv::Point (p2.x - corner_radius, p2.y), color, thickness, line_type);
         cv::line(src, cv::Point (p2.x, p2.y + corner_radius), cv::Point (p3.x, p3.y - corner_radius), color, thickness, line_type);
@@ -86,9 +85,9 @@ namespace vp_utils {
         if (fill) {
             draw_rounded_rectangle(canvas, cv::Point(rect.x, rect.y), cv::Point(rect.x + rect.width, rect.y + rect.height), 3, border_color, -1, fill_color);
         }
-        cv::putText(canvas, 
-            text, 
-            cv::Point(rect.x + (rect.width - text_size.width) / 2, rect.y + rect.height - (rect.height - text_size.height) / 2), 
+        cv::putText(canvas,
+            text,
+            cv::Point(rect.x + (rect.width - text_size.width) / 2, rect.y + rect.height - (rect.height - text_size.height) / 2),
             font_face, font_scale, color);
     }
 
@@ -111,7 +110,7 @@ namespace vp_utils {
         if (ends_with(output, ".")) {
             output.pop_back();
         }
-        
+
         return output;
     }
 
@@ -150,15 +149,15 @@ namespace vp_utils {
     }
 
     // set width and fill, like ostream.fill() and ostream.width()
-    inline std::string set_width_and_fill(std::string str, 
-                                    int width, 
-                                    char fill = '0', 
+    inline std::string set_width_and_fill(std::string str,
+                                    int width,
+                                    char fill = '0',
                                     bool fill_left = true) {
         while (str.size() < width) {
             if (fill_left) {
                 str = fill + str;
             }
-            else {   
+            else {
                 str = str + fill;
             }
         }
