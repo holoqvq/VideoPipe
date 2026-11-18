@@ -2,11 +2,16 @@
 #include "vp_logger.h"
 
 namespace vp_utils {
-        
+
     vp_logger::vp_logger(/* args */)
     {
     }
-    
+
+    vp_logger& vp_logger::get_logger() {
+        static vp_logger logger;
+        return logger;
+    }
+
     vp_logger::~vp_logger() {
         die();
         if (log_writer_th.joinable()) {
@@ -35,7 +40,7 @@ namespace vp_utils {
         #endif
 
         // run thread
-        auto t = std::thread(&vp_logger::log_write_run, this); 
+        auto t = std::thread(&vp_logger::log_write_run, this);
         log_writer_th = std::move(t);
     }
 
@@ -44,14 +49,14 @@ namespace vp_utils {
         if (!inited) {
             throw "vp_logger is not initialized yet!";
         }
-        
+
         // level filter
         if (level > log_level) {
             return;
         }
-        
+
         // keywords filter for debug level
-        if (level == vp_log_level::DEBUG && keywords_for_debug_log.size() != 0) {
+        if (level == vp_log_level::Debug && keywords_for_debug_log.size() != 0) {
             bool filterd = true;
             for(auto& keywords: keywords_for_debug_log) {
                 if (message.find(keywords) != std::string::npos) {
@@ -63,7 +68,7 @@ namespace vp_utils {
                 return;
             }
         }
-        
+
         /* create log */
         std::string new_log = "";
         // 100% true for log time
@@ -81,10 +86,10 @@ namespace vp_utils {
             auto id = std::this_thread::get_id();
             std::stringstream ss;
             ss << std::hex << id;  // to hex
-            auto thread_id = ss.str(); 
+            auto thread_id = ss.str();
             new_log += "[" + thread_id + "]";
         }
-        
+
         // code location
         if (include_code_location) {
             new_log += "[" + std::string(code_file) + ":" + std::to_string(code_line) + "]";
@@ -112,7 +117,7 @@ namespace vp_utils {
             if (log == "die") {
                 continue;
             }
-            
+
             /* watch the log cache size */
             auto log_cache_size = 0;
             {
@@ -127,12 +132,12 @@ namespace vp_utils {
             if (log_cache_size <= log_cache_warn_threshold) {
                 log_thres_warned = false;
             }
-            
+
             /* write to devices */
             if (log_to_console) {
                 write_to_console(log);
             }
-            
+
             if (log_to_file) {
                 write_to_file(log);
             }
