@@ -75,6 +75,9 @@ namespace vp_objects {
         // embeddings can be used for reid related works.
         std::vector<float> embeddings;
 
+        // reading of gauge, -1 means no value (filled by gauge regressor infer nodes).
+        float gauge_value = -1.0f;
+
         // ba flags of the target, hold by this value (created/updated by ba nodes).
         // for example, 0001/0010/0100/1000 stands for 4 different flags, 1110 means 3 flags are on and another one is off, using ^|& operators to update and read. 
         // if 0100 stands for 'Stop' flag of target,  'ba_flags|=0100' means set 'Stop' flag as On, '(ba_flags & 0100) == 0100' means 'Stop' flag is already On. 

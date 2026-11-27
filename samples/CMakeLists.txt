@@ -45,6 +45,12 @@ target_link_libraries(multi_detectors_and_classifiers_sample ${PROJECT_NAME})
 add_executable(N-1-N_sample "N-1-N_sample.cpp")
 target_link_libraries(N-1-N_sample ${PROJECT_NAME})
 
+add_executable(multi_src_face_recognize_sample "multi_src_face_recognize_sample.cpp")
+target_link_libraries(multi_src_face_recognize_sample ${PROJECT_NAME})
+
+add_executable(multi_src_gauge_recognize_sample "multi_src_gauge_recognize_sample.cpp")
+target_link_libraries(multi_src_gauge_recognize_sample ${PROJECT_NAME})
+
 add_executable(N-N_sample "N-N_sample.cpp")
 target_link_libraries(N-N_sample ${PROJECT_NAME})
 
