@@ -23,7 +23,7 @@ namespace vp_nodes {
             }
 
             if (!ff_packet) {
-                VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][enmux_run] get exit flag.", 
+                VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][enmux_run] get exit flag.",
                                                 get_channel_index()));
                 break;
             } else {
@@ -34,7 +34,7 @@ namespace vp_nodes {
             }
 
             if (ret < 0) {
-                VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][enmux_run] av_interleaved_write_frame failed. ret: %d", 
+                VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][enmux_run] av_interleaved_write_frame failed. ret: %d",
                                                  get_channel_index(), ret));
                 break;
             }
@@ -42,13 +42,13 @@ namespace vp_nodes {
         /* write the trailer for output stream */
         ret = av_write_trailer(m_ofmt_ctx);
         if (ret != 0) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][enmux_run] av_write_trailer failed. ret: %d", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][enmux_run] av_write_trailer failed. ret: %d",
                                              get_channel_index(), ret));
         }
-        
+
         /* set enmux running flag to false in case of abnormal exit */
         m_enmux_running = false;
-        VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][enmux_run] enmux thread exits.", 
+        VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][enmux_run] enmux thread exits.",
                                         get_channel_index()));
     }
 
@@ -64,25 +64,25 @@ namespace vp_nodes {
 
             auto ret = 0;
             if (!ff_frame) {
-                VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][encode_run] get exit flag.", 
+                VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][encode_run] get exit flag.",
                                                 get_channel_index()));
                 break;
             }
-            ff_frame->pts = m_enc_ctx->frame_number;
+            ff_frame->pts = m_enc_ctx->frame_num;
             ret = avcodec_send_frame(m_enc_ctx, ff_frame.get());
             if (ret < 0) {
-                VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][encode_run] avcodec_send_frame failed. ret: %d", 
+                VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][encode_run] avcodec_send_frame failed. ret: %d",
                                                  get_channel_index(), ret));
                 break;
             }
-            
+
             while (ret >= 0) {
                 auto ff_packet = alloc_ff_av_packet();
                 ret = avcodec_receive_packet(m_enc_ctx, ff_packet.get());
                 if (ret == AVERROR(EAGAIN)) {
                     break;
                 } else if (ret < 0) {
-                    VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][encode_run] avcodec_receive_packet failed. ret: %d", 
+                    VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][encode_run] avcodec_receive_packet failed. ret: %d",
                                                      get_channel_index(), ret));
                     ff_frame = nullptr;
                     break;
@@ -95,7 +95,7 @@ namespace vp_nodes {
                     if (m_enmux_packets_q.size() > m_enmux_packets_q_max_size) {
                         m_enmux_packets_q.pop();
                         notify = false;
-                        VP_WARN(vp_utils::string_format("[ffio/ff_des][%d][encode_run] exceed m_enmux_packets_q_max_size(%d), discard the front in queue.", 
+                        VP_WARN(vp_utils::string_format("[ffio/ff_des][%d][encode_run] exceed m_enmux_packets_q_max_size(%d), discard the front in queue.",
                                                         get_channel_index(), m_enmux_packets_q_max_size));
                     }
                 }
@@ -103,10 +103,10 @@ namespace vp_nodes {
                     m_enmux_semaphore.signal();
                 }
             }
-            
+
             if (!ff_frame) {
                 break;
-            }  
+            }
         }
         /* set encode running flag to false in case of abnormal exit */
         m_encode_running = false;
@@ -114,18 +114,18 @@ namespace vp_nodes {
             // send exit flag to notify enmux thread
             std::lock_guard<std::mutex> g(m_enmux_packets_m);
             m_enmux_packets_q.push(nullptr);
-            VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][encode_run] send exit flag to enmux thread.", 
+            VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][encode_run] send exit flag to enmux thread.",
                                             get_channel_index()));
         }
         m_enmux_semaphore.signal();
-        VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][encode_run] encode thread exits.", 
+        VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][encode_run] encode thread exits.",
                                         get_channel_index()));
     }
 
     bool ff_des::
     open(const std::string& uri,
          int width, int height, int fps, int bitrate, int max_b_frames,
-         const std::string& encoder_name, 
+         const std::string& encoder_name,
          AVPixelFormat sw_pix_fmt,
          AVHWDeviceType hw_type,
          AVPixelFormat hw_pix_fmt) {
@@ -147,7 +147,7 @@ namespace vp_nodes {
             }
         }
         if (!uri_valid) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][open] uri invalid! uri MUST start with `rtsp/rtmp/..`(network streams) or end with `mp4/mkv/..`(file streams).", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][open] uri invalid! uri MUST start with `rtsp/rtmp/..`(network streams) or end with `mp4/mkv/..`(file streams).",
                                              get_channel_index()));
             return false;
         }
@@ -200,8 +200,8 @@ namespace vp_nodes {
             std::lock_guard<std::mutex> g(m_encode_frames_m);
             m_encode_frames_q = {};
             m_encode_semaphore.reset();
-        }    
-        VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][inner_close] close successfully.", 
+        }
+        VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][inner_close] close successfully.",
                                         get_channel_index()));
     }
 
@@ -212,7 +212,7 @@ namespace vp_nodes {
     bool ff_des::
     inner_open(const std::string& uri,
                int width, int height, int fps, int bitrate, int max_b_frames,
-               const std::string& encoder_name, 
+               const std::string& encoder_name,
                AVPixelFormat sw_pix_fmt,
                AVHWDeviceType hw_type,
                AVPixelFormat hw_pix_fmt) {
@@ -220,17 +220,17 @@ namespace vp_nodes {
         /* allocate the output media context */
         ret = avformat_alloc_output_context2(&m_ofmt_ctx, NULL, NULL, uri.c_str());
         if (ret < 0) {
-            VP_WARN(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not deduce output format from uri, try to use FLV.", 
+            VP_WARN(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not deduce output format from uri, try to use FLV.",
                                              get_channel_index()));
             ret = avformat_alloc_output_context2(&m_ofmt_ctx, NULL, "flv", uri.c_str());
         }
         if (ret < 0) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not deduce output format from uri(used FLV).", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not deduce output format from uri(used FLV).",
                                              get_channel_index()));
             return false;
         }
-        auto ofmt = m_ofmt_ctx->oformat;   
-        
+        auto ofmt = m_ofmt_ctx->oformat;
+
         /* find encoder for the output stream */
         const AVCodec* enc = nullptr;
         if (encoder_name.empty()) {
@@ -239,7 +239,7 @@ namespace vp_nodes {
             enc = avcodec_find_encoder_by_name(encoder_name.c_str());  // get by encoder name
         }
         if (!enc) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not find proper encoder for output stream.", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not find proper encoder for output stream.",
                                              get_channel_index()));
             avformat_free_context(m_ofmt_ctx);
             m_ofmt_ctx = NULL;
@@ -248,7 +248,7 @@ namespace vp_nodes {
         /* allocate a codec context for the encoder */
         m_enc_ctx = avcodec_alloc_context3(enc);
         if (!m_enc_ctx) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not allocate context for encoder(%s).", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not allocate context for encoder(%s).",
                                              get_channel_index(), enc->name));
             avformat_free_context(m_ofmt_ctx);
             m_ofmt_ctx = NULL;
@@ -266,7 +266,7 @@ namespace vp_nodes {
         if (hw_type != AVHWDeviceType::AV_HWDEVICE_TYPE_NONE) {
             m_enc_ctx->pix_fmt   = hw_pix_fmt;
             if ((ret = hw_encoder_init(m_enc_ctx, hw_type, sw_pix_fmt)) < 0) {
-                VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] hw_encoder_init failed. ret: %d", 
+                VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] hw_encoder_init failed. ret: %d",
                                                  get_channel_index(), ret));
                 avcodec_free_context(&m_enc_ctx);
                 avformat_free_context(m_ofmt_ctx);
@@ -276,7 +276,7 @@ namespace vp_nodes {
         }
         /* open the encoder */
         if ((ret = avcodec_open2(m_enc_ctx, enc, NULL)) < 0) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not open encoder. ret: %d", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not open encoder. ret: %d",
                                              get_channel_index(), ret));
             avcodec_free_context(&m_enc_ctx);
             avformat_free_context(m_ofmt_ctx);
@@ -286,7 +286,7 @@ namespace vp_nodes {
         /* create new stream for output */
         auto out_stream = avformat_new_stream(m_ofmt_ctx, NULL);
         if (!out_stream) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not create new stream for output uri.", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] could not create new stream for output uri.",
                                              get_channel_index()));
             avcodec_free_context(&m_enc_ctx);
             avformat_free_context(m_ofmt_ctx);
@@ -297,7 +297,7 @@ namespace vp_nodes {
         out_stream->time_base = m_enc_ctx->time_base;
         ret = avcodec_parameters_from_context(out_stream->codecpar, m_enc_ctx);
         if (ret < 0) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] failed to copy codec parameters from encode context. ret: %d", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] failed to copy codec parameters from encode context. ret: %d",
                                              get_channel_index(), ret));
             avcodec_free_context(&m_enc_ctx);
             avformat_free_context(m_ofmt_ctx);
@@ -309,7 +309,7 @@ namespace vp_nodes {
             m_ofmt_ctx->flush_packets = 1;
             m_ofmt_ctx->flags |= AVFMT_FLAG_FLUSH_PACKETS;
             if (ret < 0) {
-                VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] avio_open failed on output uri(%s). ret: %d", 
+                VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] avio_open failed on output uri(%s). ret: %d",
                                                  get_channel_index(), uri.c_str(), ret));
                 avcodec_free_context(&m_enc_ctx);
                 avformat_free_context(m_ofmt_ctx);
@@ -320,14 +320,14 @@ namespace vp_nodes {
 
         /* write the stream header */
         if ((ret = avformat_write_header(m_ofmt_ctx, NULL)) < 0) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] avformat_write_header failed. ret: %d", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][inner_open] avformat_write_header failed. ret: %d",
                                              get_channel_index(), ret));
             avcodec_free_context(&m_enc_ctx);
             avformat_free_context(m_ofmt_ctx);
             m_ofmt_ctx = NULL;
             return false;
         }
-        
+
         /* initialize video & ff_des properties */
         m_hw_type_name = hw_type != AV_HWDEVICE_TYPE_NONE ? std::string(av_hwdevice_get_type_name(hw_type)) : "none";
         m_encoder_name = encoder_name.empty() ? std::string(m_enc_ctx->codec->name) : encoder_name;
@@ -348,16 +348,16 @@ namespace vp_nodes {
         m_encode_running = true;
         m_enmux_th = std::make_shared<std::thread>(&ff_des::enmux_run, this);
         m_encode_th = std::make_shared<std::thread>(&ff_des::encode_run, this);
-        VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][inner_open] open successfully.", 
+        VP_INFO(vp_utils::string_format("[ffio/ff_des][%d][inner_open] open successfully.",
                                         get_channel_index()));
-        return true;   
+        return true;
     }
 
     bool ff_des::write(const ff_av_frame_ptr& frame) {
         if (!is_opened()) {
             return false;
         }
-        
+
         bool notify = true;
         {
             std::lock_guard<std::mutex> g(m_encode_frames_m);
@@ -365,7 +365,7 @@ namespace vp_nodes {
             if (m_encode_frames_q.size() > m_encode_frames_q_max_size) {
                 m_encode_frames_q.pop();
                 notify = false;
-                VP_WARN(vp_utils::string_format("[ffio/ff_des][%d][write] exceed m_encode_frames_q_max_size(%d), discard the front in queue.", 
+                VP_WARN(vp_utils::string_format("[ffio/ff_des][%d][write] exceed m_encode_frames_q_max_size(%d), discard the front in queue.",
                                                 get_channel_index(), m_encode_frames_q_max_size));
             }
         }
@@ -398,7 +398,7 @@ namespace vp_nodes {
     }
 
     int ff_des::get_video_height() const {
-        return m_height;    
+        return m_height;
     }
 
     long ff_des::get_video_bitrate() const {
@@ -430,7 +430,7 @@ namespace vp_nodes {
     }
 
     int ff_des::get_channel_index() const {
-        return m_channel_index;   
+        return m_channel_index;
     }
 
     const AVCodecContext* ff_des::get_encode_ctx() const {
@@ -438,8 +438,8 @@ namespace vp_nodes {
     }
 
     int ff_des::
-    hw_encoder_init(AVCodecContext* enc_ctx, 
-                    const enum AVHWDeviceType hw_type, 
+    hw_encoder_init(AVCodecContext* enc_ctx,
+                    const enum AVHWDeviceType hw_type,
                     const enum AVPixelFormat sw_pix_fmt) {
         AVBufferRef* hw_device_ctx = nullptr;
         AVBufferRef* hw_frames_ref = nullptr;
@@ -447,13 +447,13 @@ namespace vp_nodes {
         int err = 0;
         if ((err = av_hwdevice_ctx_create(&hw_device_ctx, hw_type,
                                         NULL, NULL, 0)) < 0) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][hw_encoder_init] failed to create specified(%s) HW device context for encoder.", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][hw_encoder_init] failed to create specified(%s) HW device context for encoder.",
                                              get_channel_index(), av_hwdevice_get_type_name(hw_type)));
             return err;
         }
 
         if (!(hw_frames_ref = av_hwframe_ctx_alloc(hw_device_ctx))) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][hw_encoder_init] failed to create specified(%s) HW frame context for encoder.", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][hw_encoder_init] failed to create specified(%s) HW frame context for encoder.",
                                              get_channel_index(), av_hwdevice_get_type_name(hw_type)));
             return err;
         }
@@ -464,7 +464,7 @@ namespace vp_nodes {
         frames_ctx->height    = enc_ctx->height;
         frames_ctx->initial_pool_size = 20;
         if ((err = av_hwframe_ctx_init(hw_frames_ref)) < 0) {
-            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][hw_encoder_init] failed to initialize specified(%s) HW frame context for encoder.", 
+            VP_ERROR(vp_utils::string_format("[ffio/ff_des][%d][hw_encoder_init] failed to initialize specified(%s) HW frame context for encoder.",
                                              get_channel_index(), av_hwdevice_get_type_name(hw_type)));
             av_buffer_unref(&hw_frames_ref);
             av_buffer_unref(&hw_device_ctx);
