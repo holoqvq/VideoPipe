@@ -1,0 +1,25 @@
+[
+  {
+    "label": "CMake: Configure Debug",
+    "command": "cmake",
+    "args": [
+      "-S", ".",
+      "-B", "build",
+      "-DCMAKE_BUILD_TYPE=Debug",
+      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+    ],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "CMake: Build multi_src_gauge_recognize_sample",
+    "command": "cmake",
+    "args": [
+      "--build", "build",
+      "--target", "multi_src_gauge_recognize_sample",
+      "-j8"
+    ],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  }
+]

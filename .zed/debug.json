@@ -1,0 +1,10 @@
+[
+  {
+    "label": "debug multi_src_gauge_recognize_sample",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "program": "./build/bin/multi_src_gauge_recognize_sample",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  }
+]
